@@ -1,5 +1,5 @@
 import { RULES, SOURCES } from "../src/rules";
-import { Panel } from "./components/Panel";
+import { StateCheck } from "./StateCheck";
 import styles from "./page.module.css";
 
 export default function Page() {
@@ -10,7 +10,7 @@ export default function Page() {
         <p className={styles.sub}>내 조건과 매물을 넣으면 대출별로 되는지, 왜 안 되는지, 매달 얼마인지 보여줘요.</p>
       </header>
 
-      <Panel>화면은 2단계부터 만들어요.</Panel>
+      <StateCheck />
 
       <footer className={styles.footer}>
         <p>
