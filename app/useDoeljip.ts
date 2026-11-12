@@ -15,6 +15,8 @@ import type { ListingMeta, ProfileEntry } from "../src/state/types";
  */
 export type StorageStatus = "loading" | "ready" | "unavailable";
 
+export type DoeljipActions = ReturnType<typeof useDoeljip>["actions"];
+
 const SAVE_DELAY_MS = 400;
 const newId = (prefix: string) => `${prefix}_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 

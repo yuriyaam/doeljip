@@ -1,0 +1,15 @@
+.wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-top: 14px; }
+.wrap > summary { cursor: pointer; font-weight: 700; font-size: 16px; }
+.wrap[open] > summary { margin-bottom: 10px; }
+.scroll { overflow-x: auto; }
+.scroll table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.scroll th, .scroll td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; white-space: nowrap; }
+.scroll th { color: var(--muted); font-weight: 500; font-size: 13px; }
+.scroll th.act { color: var(--ink); font-weight: 700; }
+.scroll td small { display: block; color: var(--muted); font-size: 12px; }
+.scroll td.better { background: var(--pass-bg); }
+.scroll td.worse { background: var(--fail-bg); }
+.tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; }
+.tagOk { background: var(--pass-bg); color: var(--pass); }
+.tagNo { background: var(--fail-bg); color: var(--fail); }
+.note { font-size: 13px; color: var(--muted); margin: 12px 0 0; }

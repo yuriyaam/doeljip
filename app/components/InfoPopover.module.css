@@ -1,0 +1,15 @@
+.pop {
+  position: fixed; z-index: 60; width: min(320px, calc(100vw - 24px)); background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .2); font-size: 14px; line-height: 1.6;
+}
+.head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+.head h4 { margin: 0; font-size: 15px; }
+.pop p { margin: 0; color: var(--ink); }
+.x { border: 0; background: none; color: var(--muted); font-size: 14px; cursor: pointer; padding: 2px 4px; }
+@media (max-width: 560px) {
+  .pop {
+    left: 12px !important; right: 12px; top: auto !important;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px)); width: auto;
+  }
+}

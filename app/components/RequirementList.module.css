@@ -1,0 +1,16 @@
+.req { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.req li {
+  display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; padding: 7px 0;
+  border-bottom: 1px solid var(--line); font-size: 14px; align-items: baseline;
+}
+.req li:last-child { border-bottom: 0; }
+.mark { font-weight: 700; }
+.ok .mark { color: var(--pass); }
+.no .mark { color: var(--fail); }
+.info .mark { color: var(--muted); }
+.detail { color: var(--muted); font-size: 13px; text-align: right; }
+.no .label { color: var(--fail); font-weight: 600; }
+@media (max-width: 560px) {
+  .req li { grid-template-columns: 22px 1fr; }
+  .detail { grid-column: 2; text-align: left; }
+}

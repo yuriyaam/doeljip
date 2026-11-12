@@ -1,16 +1,11 @@
 import { RULES, SOURCES } from "../src/rules";
-import { StateCheck } from "./StateCheck";
+import { DoeljipApp } from "./DoeljipApp";
 import styles from "./page.module.css";
 
 export default function Page() {
   return (
     <main className={styles.wrap}>
-      <header className={styles.top}>
-        <h1>이 집, 대출 될까?</h1>
-        <p className={styles.sub}>내 조건과 매물을 넣으면 대출별로 되는지, 왜 안 되는지, 매달 얼마인지 보여줘요.</p>
-      </header>
-
-      <StateCheck />
+      <DoeljipApp />
 
       <footer className={styles.footer}>
         <p>
