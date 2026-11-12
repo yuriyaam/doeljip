@@ -12,13 +12,13 @@
 .item { cursor: pointer; }
 .item:hover { background: var(--paper); }
 .num { text-align: right; font-variant-numeric: tabular-nums; }
-.thead { color: var(--muted); font-size: 12.5px; padding-top: 6px; padding-bottom: 8px; }
+.thead { color: var(--muted); font-size: 13px; padding-top: 6px; padding-bottom: 8px; }
 .nm b { font-size: 15px; }
-.nm em { display: block; font-style: normal; font-size: 12px; color: var(--muted); }
+.nm em { display: block; font-style: normal; font-size: 13px; color: var(--muted); }
 .chev { display: inline-block; width: 12px; color: var(--muted); transition: transform .15s; }
 .item[aria-expanded="true"] .chev { transform: rotate(90deg); }
-.pick { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 700; color: var(--accent-ink); background: var(--accent); border-radius: 4px; padding: 0 6px; vertical-align: 2px; }
-.badge { display: inline-block; margin-top: 4px; font-size: 11.5px; font-weight: 600; color: var(--pass); background: var(--pass-bg); border-radius: 99px; padding: 1px 8px; }
+.pick { display: inline-block; margin-left: 6px; font-size: 12px; font-weight: 700; color: var(--accent-ink); background: var(--accent); border-radius: 4px; padding: 0 6px; vertical-align: 2px; }
+.badge { display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 600; color: var(--pass); background: var(--pass-bg); border-radius: 99px; padding: 1px 8px; }
 .bad { color: var(--fail); }
 
 .ghost { border: 1px dashed var(--pass); border-radius: 8px; margin-top: 8px; background: color-mix(in srgb, var(--pass-bg) 45%, transparent); }
@@ -32,7 +32,7 @@
 .bind { font-size: 13px; margin: 0 0 8px; padding: 7px 10px; border-radius: 7px; background: var(--paper); }
 .rate { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; font-size: 14px; }
 .rate input { width: 74px; padding: 4px 8px; font-size: 15px; font-weight: 700; }
-.rate small { color: var(--muted); }
+.rate small { color: var(--muted); font-size: 13px; }
 .boost { margin: 0 0 10px; padding: 9px 12px; border: 1px dashed var(--pass); border-radius: 8px; font-size: 14px; background: var(--pass-bg); }
 .boost b { color: var(--pass); }
 
@@ -47,7 +47,7 @@
 .txt { flex: 1; display: flex; flex-wrap: wrap; gap: 2px 10px; align-items: baseline; min-width: 0; }
 .txt b { font-size: 14px; }
 .why { color: var(--fail); font-size: 13px; }
-.more { flex: none; font-size: 12.5px; font-weight: 600; color: var(--accent); border: 1px solid var(--line); border-radius: 99px; padding: 2px 10px; background: var(--surface); }
+.more { flex: none; font-size: 13px; font-weight: 600; color: var(--accent); border: 1px solid var(--line); border-radius: 99px; padding: 2px 10px; background: var(--surface); }
 .more::after { content: "요건 보기"; }
 .ng[open] .more::after { content: "접기"; }
 .ngReq { margin: 0 8px 10px 20px; }
@@ -59,6 +59,6 @@
   .row { grid-template-columns: 1fr 1fr; row-gap: 6px; }
   .nm { grid-column: 1 / -1; }
   .num { text-align: left; }
-  .num::before { content: attr(data-label); display: block; font-size: 11.5px; color: var(--muted); }
+  .num::before { content: attr(data-label); display: block; font-size: 13px; color: var(--muted); }
   .detail { padding-left: 8px; }
 }

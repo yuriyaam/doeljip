@@ -1,7 +1,7 @@
 .field { margin-bottom: 11px; font-size: 13px; color: var(--muted); font-weight: 500; }
 .label { display: block; margin-bottom: 4px; }
 .label label { cursor: pointer; }
-.hint { display: block; font-size: 12px; margin-top: 4px; }
+.hint { display: block; font-size: 13px; margin-top: 4px; }
 .unit { position: relative; display: block; }
 .unit input { padding-right: 46px; }
 .unit i { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-style: normal; color: var(--muted); font-size: 13px; pointer-events: none; }

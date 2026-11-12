@@ -6,10 +6,10 @@
 .scroll th, .scroll td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; white-space: nowrap; }
 .scroll th { color: var(--muted); font-weight: 500; font-size: 13px; }
 .scroll th.act { color: var(--ink); font-weight: 700; }
-.scroll td small { display: block; color: var(--muted); font-size: 12px; }
+.scroll td small { display: block; color: var(--muted); font-size: 13px; }
 .scroll td.better { background: var(--pass-bg); }
 .scroll td.worse { background: var(--fail-bg); }
-.tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; }
+.tag { display: inline-block; font-size: 13px; font-weight: 700; padding: 1px 8px; border-radius: 99px; }
 .tagOk { background: var(--pass-bg); color: var(--pass); }
 .tagNo { background: var(--fail-bg); color: var(--fail); }
 .note { font-size: 13px; color: var(--muted); margin: 12px 0 0; }
