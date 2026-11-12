@@ -1,0 +1,4 @@
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+.panel + .panel { margin-top: 14px; }
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+.title { font-size: 16px; margin: 0; font-weight: 700; }

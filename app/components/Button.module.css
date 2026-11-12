@@ -1,0 +1,13 @@
+.btn { font: inherit; font-weight: 600; cursor: pointer; }
+.btn:disabled { opacity: .5; cursor: default; }
+
+.primary, .ghost { border-radius: 8px; padding: 10px 14px; border: 1px solid var(--accent); }
+.primary { background: var(--accent); color: var(--accent-ink); }
+.ghost { background: transparent; color: var(--accent); }
+
+.link { background: none; border: 0; color: var(--accent); padding: 0; }
+.link:disabled { opacity: .4; }
+
+.danger { color: var(--fail); }
+.primary.danger { background: var(--fail); border-color: var(--fail); color: var(--accent-ink); }
+.ghost.danger { border-color: var(--fail); }

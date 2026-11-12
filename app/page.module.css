@@ -1,0 +1,5 @@
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+.top { margin-bottom: 22px; }
+.sub { color: var(--muted); margin: 4px 0 0; font-size: 14px; }
+.footer { margin-top: 28px; font-size: 12.5px; color: var(--muted); max-width: 780px; }
+.footer ul { margin: 6px 0 0; padding-left: 18px; }

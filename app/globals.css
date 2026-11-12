@@ -1,0 +1,35 @@
+/* 전역: 색 토큰, 리셋, 기본 요소. 컴포넌트별 스타일은 *.module.css에 둬요. */
+:root {
+  --paper: #F3F5F1; --surface: #FFFFFF; --ink: #1D2A36; --muted: #5C6870; --line: #D6DBD3;
+  --pass: #1E7558; --pass-bg: #E6F2EC; --fail: #B5372D; --fail-bg: #F8E9E6;
+  --accent: #2D4B73; --accent-ink: #FFFFFF; --field: #FBFCFA;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12171C; --surface: #1A2128; --ink: #E4E9E4; --muted: #9AA5AC; --line: #2E3842;
+    --pass: #56C39A; --pass-bg: #173329; --fail: #EC7E71; --fail-bg: #3A1F1C;
+    --accent: #91B2DC; --accent-ink: #0F1620; --field: #151B21; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12171C; --surface: #1A2128; --ink: #E4E9E4; --muted: #9AA5AC; --line: #2E3842;
+  --pass: #56C39A; --pass-bg: #173329; --fail: #EC7E71; --fail-bg: #3A1F1C;
+  --accent: #91B2DC; --accent-ink: #0F1620; --field: #151B21; color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--font-plex), "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+  font-size: 15px; line-height: 1.6; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased;
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+}
+h1 { font-size: 28px; line-height: 1.25; margin: 0; font-weight: 700; letter-spacing: -0.02em; }
+input, select {
+  width: 100%; font: inherit; font-size: 15px; color: var(--ink); background: var(--field);
+  border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+}
+input:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+[hidden] { display: none !important; }

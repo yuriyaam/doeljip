@@ -1,0 +1,6 @@
+.ib {
+  display: inline-grid; place-items: center; width: 17px; height: 17px; margin-left: 5px; padding: 0;
+  vertical-align: 1px; border-radius: 50%; border: 1px solid currentColor; background: transparent;
+  color: var(--muted); font: italic 600 11px/1 Georgia, "Times New Roman", serif; cursor: pointer; flex: none;
+}
+.ib:hover, .ib[aria-expanded="true"] { color: var(--accent); }
