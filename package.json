@@ -1,0 +1,16 @@
+{
+  "name": "doeljip",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "주택 구입 대출 판정 엔진 (LTV·DSR·DTI, 정책대출 요건, 네고 시뮬레이션)",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "5.6.3",
+    "vitest": "2.1.8"
+  }
+}
