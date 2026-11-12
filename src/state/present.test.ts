@@ -3,7 +3,7 @@ import { GLOSSARY, termKeysFor } from "../glossary";
 import { computeCheck } from "./derive";
 import { DEFAULT_HOUSE, DEFAULT_PROFILE } from "./defaults";
 import {
-  LOAN_SUB, bindingText, boostLine, conclusionTip, firstFailLabel, limitChange, noGoReason,
+  LOAN_SUB, bindingText, boostLine, conclusionTip, firstFailLabel, limitChange, negoPct, noGoReason,
   profileSummary, reqTermText, won, type TextPart,
 } from "./present";
 
@@ -62,7 +62,7 @@ describe("프로필 요약", () => {
 });
 
 describe("대출 설명 문구", () => {
-  const check = computeCheck(newlyweds, local(60000), {}, "monthly", 5000);
+  const check = computeCheck(newlyweds, local(60000), {}, "monthly");
 
   it("모든 대출에 부제가 있다", () => {
     expect(Object.keys(LOAN_SUB).sort()).toEqual(["bogeum", "didimdol", "general", "newborn"]);
@@ -91,30 +91,38 @@ describe("대출 설명 문구", () => {
 describe("결론 네고 팁", () => {
   it("추천이 없을 때: 네고하면 가능한 대출을 알려준다 (지방 6.2억 → 2천만원 네고 시 디딤돌)", () => {
     // 실제 판정 결과에서 추천만 비워서(= 가능한 대출 없음) 해당 문구 분기를 확인해요.
-    const c = { ...computeCheck(newlyweds, local(62000), {}, "monthly", 5000), best: null };
+    const c = { ...computeCheck(newlyweds, local(62000), {}, "monthly"), best: null };
     const tip = conclusionTip(c);
-    expect(text(tip)).toMatch(/^매매가를 2,000만원 네고해 6억원에 사면 디딤돌대출로 가능해요\.$/);
+    expect(text(tip)).toMatch(/^매매가를 2,000만원\(3\.2%\) 네고해 6억원에 사면 디딤돌대출로 가능해요\.$/);
     expect(bold(tip)).toEqual(["2,000만원", "디딤돌대출"]);
   });
 
   it("추천이 있고 네고로 월 상환액이 줄면 줄어드는 금액을 보여준다", () => {
-    const c = computeCheck(newlyweds, local(62000), {}, "monthly", 5000);
+    const c = computeCheck(newlyweds, local(62000), {}, "monthly");
     const tip = conclusionTip(c);
     expect(c.best).not.toBeNull();
     expect(tip).not.toBeNull();
-    expect(text(tip)).toMatch(/^매매가를 .+ 네고하면 .+로 월 상환액이 .+원 줄어요/);
+    expect(text(tip)).toMatch(/^매매가를 .+\(\d+(\.\d)?%\) 네고하면 .+로 월 상환액이 .+원 줄어요/);
     expect(bold(tip)).toHaveLength(3);
   });
 
   it("네고 옵션이 없으면 null", () => {
-    expect(conclusionTip(computeCheck(newlyweds, local(60000), {}, "monthly", 0))).toBeNull();
+    expect(conclusionTip(computeCheck(DEFAULT_PROFILE, DEFAULT_HOUSE, {}, "monthly"))).toBeNull();
   });
 
   it("한도가 늘어나는 안내 (서울 15.5억 → 5천만원 네고 시 한도 +2억)", () => {
-    const c = computeCheck({ ...DEFAULT_PROFILE, inc1: 30000 }, { ...DEFAULT_HOUSE, price: 155000 }, {}, "monthly", 5000);
+    const c = computeCheck({ ...DEFAULT_PROFILE, inc1: 30000 }, { ...DEFAULT_HOUSE, price: 155000 }, {}, "monthly");
     const boost = c.nego.find((n) => n.id === "general")!;
     expect(boost.kind).toBe("boost");
-    expect(text(boostLine(boost))).toBe("매매가를 5,000만원 낮춰 15억원에 사면 한도가 2억원 늘어나요 (최대 6억원).");
+    expect(text(boostLine(boost))).toBe("매매가를 5,000만원(3.2%) 낮춰 15억원에 사면 한도가 2억원 늘어나요 (최대 6억원).");
+  });
+});
+
+describe("네고 비율 표시", () => {
+  it("매매가 대비 %를 소수 첫째 자리까지 보여준다", () => {
+    expect(negoPct({ discount: 2000, newPrice: 60000 })).toBe("3.2%");
+    expect(negoPct({ discount: 3000, newPrice: 77000 })).toBe("3.8%");
+    expect(negoPct({ discount: 4000, newPrice: 76000 })).toBe("5%");
   });
 });
 
@@ -122,8 +130,8 @@ describe("조건별 비교", () => {
   it("한도가 늘면 better, 줄면 worse, 같으면 null", () => {
     // 소득이 낮으면 DSR이 한도를 묶으니, 소득을 늘리면 한도가 커져요.
     const poor = { ...DEFAULT_PROFILE, inc1: 3000, inc2: 0 };
-    const base = computeCheck(poor, local(60000), {}, "monthly", 0).evaluation.results;
-    const rich = computeCheck({ ...poor, inc2: 4000 }, local(60000), {}, "monthly", 0).evaluation.results;
+    const base = computeCheck(poor, local(60000), {}, "monthly").evaluation.results;
+    const rich = computeCheck({ ...poor, inc2: 4000 }, local(60000), {}, "monthly").evaluation.results;
     const g = (rs: typeof base) => rs.find((r) => r.id === "general")!;
     expect(limitChange(g(base), g(rich))).toBe("better");
     expect(limitChange(g(rich), g(base))).toBe("worse");

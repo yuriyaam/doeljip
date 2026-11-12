@@ -27,9 +27,19 @@ export const DEFAULT_HOUSE: House = {
   method: "annuity",
 };
 
-export const DEFAULT_META: ListingMeta = { name: "", memo: "", url: "", negoMax: 5000 };
+export const DEFAULT_META: ListingMeta = { name: "", memo: "", url: "" };
 
-export const NEGO_MAX_OPTIONS = [3000, 5000, 10000] as const;
+/**
+ * 네고 시뮬레이션이 살펴보는 최대 폭 = 매매가의 이 비율 (고객이 고르지 않아요).
+ * 이 폭 안에서 불가였던 대출이 가능해지거나 한도가 늘어나면 알려줘요.
+ * "현실적인 네고 폭"은 제품 가정이라, 바꾸려면 이 값만 고치세요.
+ */
+export const NEGO_MAX_RATIO = 0.05;
+
+/** 매매가에 맞는 네고 검토 상한 (만원, 100만원 단위 내림) */
+export function negoMaxFor(price: number): number {
+  return Math.floor((price * NEGO_MAX_RATIO) / 100) * 100;
+}
 
 export function defaultDraft(): Draft {
   return { house: { ...DEFAULT_HOUSE }, meta: { ...DEFAULT_META }, listingId: null };

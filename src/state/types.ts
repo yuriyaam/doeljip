@@ -16,8 +16,6 @@ export interface ListingMeta {
   memo: string;
   /** 매물 링크. 저장만 하고 서버에서 읽어오지 않아요. */
   url: string;
-  /** 네고 시뮬레이션 범위 (simulateNego의 max) */
-  negoMax: number;
 }
 
 /** 저장 목록에 보여줄 판정 요약 */

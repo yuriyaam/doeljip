@@ -3,7 +3,6 @@
 import { useMemo } from "react";
 import type { House } from "../src/engine";
 import { RULES } from "../src/rules";
-import { NEGO_MAX_OPTIONS } from "../src/state/defaults";
 import type { ListingMeta } from "../src/state/types";
 import { Button } from "./components/Button";
 import { CheckField, FieldRow, NumberField, SelectField, TextField } from "./components/Field";
@@ -19,7 +18,6 @@ const METHOD_OPTIONS = [
   { value: "principal", label: "원금균등" },
 ] as const;
 const YEAR_CHOICES = [20, 30, 40];
-const nego = (v: number) => (v >= 10000 ? "1억원까지" : `${v.toLocaleString("ko-KR")}만원까지`);
 
 const STORE_HINT: Record<StorageStatus, string> = {
   loading: "저장 공간 연결 중…",
@@ -42,10 +40,6 @@ export function ListingPanel({ house, meta, status, actions }: Props) {
     () => (YEAR_CHOICES.includes(house.years) ? YEAR_CHOICES : [...YEAR_CHOICES, house.years].sort((a, b) => a - b))
       .map((y) => ({ value: String(y), label: `${y}년` })),
     [house.years],
-  );
-  const negoOptions = useMemo(
-    () => (NEGO_MAX_OPTIONS as readonly number[]).includes(meta.negoMax) ? [...NEGO_MAX_OPTIONS] : [...NEGO_MAX_OPTIONS, meta.negoMax].sort((a, b) => a - b),
-    [meta.negoMax],
   );
 
   return (
@@ -97,12 +91,6 @@ export function ListingPanel({ house, meta, status, actions }: Props) {
         value={house.method}
         options={METHOD_OPTIONS}
         onChange={(v) => actions.updateHouse({ method: v })}
-      />
-      <SelectField
-        label="네고 검토 범위"
-        value={String(meta.negoMax)}
-        options={negoOptions.map((v) => ({ value: String(v), label: nego(v) }))}
-        onChange={(v) => actions.updateMeta({ negoMax: Number(v) })}
       />
       <TextField
         label="매물 링크 (선택)"

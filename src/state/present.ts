@@ -62,6 +62,12 @@ export interface TextPart { text: string; bold?: boolean }
 const b = (text: string): TextPart => ({ text, bold: true });
 const t = (text: string): TextPart => ({ text });
 
+/** 네고 금액이 매매가의 몇 %인지 (소수 첫째 자리). 현실적인 폭인지 가늠하는 용도예요. */
+export function negoPct(n: Pick<NegoOption, "discount" | "newPrice">): string {
+  const price = n.newPrice + n.discount;
+  return `${Math.round((n.discount / price) * 1000) / 10}%`;
+}
+
 /** 결론 아래 네고 팁. 추천이 없으면 "네고하면 가능", 있으면 월 상환액이 줄 때만 안내해요. */
 export function conclusionTip(check: CheckResult): TextPart[] | null {
   const unlocks = check.nego.filter((n) => n.kind === "unlock");
@@ -70,18 +76,18 @@ export function conclusionTip(check: CheckResult): TextPart[] | null {
   const { best } = check;
   const name = cheapest.result.name;
   if (!best) {
-    return [t("매매가를 "), b(fmt(cheapest.discount)), t(` 네고해 ${fmt(cheapest.newPrice)}에 사면 `), b(name), t("로 가능해요.")];
+    return [t("매매가를 "), b(fmt(cheapest.discount)), t(`(${negoPct(cheapest)}) 네고해 ${fmt(cheapest.newPrice)}에 사면 `), b(name), t("로 가능해요.")];
   }
   const saving = best.firstPayment - cheapest.result.firstPayment;
   if (saving < 0.5) return null;
   const warn = cheapest.result.gap > 0 && best.gap <= 0 ? " (단, 부족 자금이 생겨요)" : "";
-  return [t("매매가를 "), b(fmt(cheapest.discount)), t(" 네고하면 "), b(name), t("로 월 상환액이 "), b(won(saving)), t(` 줄어요${warn}.`)];
+  return [t("매매가를 "), b(fmt(cheapest.discount)), t(`(${negoPct(cheapest)}) 네고하면 `), b(name), t("로 월 상환액이 "), b(won(saving)), t(` 줄어요${warn}.`)];
 }
 
 /** 대출 행 펼침 안의 네고 안내. 한도가 늘어나는(boost) 경우만 쓰여요. */
 export function boostLine(n: NegoOption): TextPart[] {
   return [
-    t("매매가를 "), b(fmt(n.discount)), t(` 낮춰 ${fmt(n.newPrice)}에 사면 한도가 `),
+    t("매매가를 "), b(fmt(n.discount)), t(`(${negoPct(n)}) 낮춰 ${fmt(n.newPrice)}에 사면 한도가 `),
     b(fmt(n.limitIncrease)), t(` 늘어나요 (최대 ${fmt(n.result.limit)}).`),
   ];
 }

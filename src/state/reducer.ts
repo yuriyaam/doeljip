@@ -71,7 +71,7 @@ export function reducer(s: AppState, a: Action): AppState {
     case "listing/save": {
       const cur = activeEntry(s);
       const { house, meta } = s.draft;
-      const check = computeCheck(cur.profile, house, s.rates, s.sortBy, meta.negoMax);
+      const check = computeCheck(cur.profile, house, s.rates, s.sortBy);
       const id = s.draft.listingId ?? a.id;
       const saved: SavedListing = {
         id,
@@ -95,7 +95,7 @@ export function reducer(s: AppState, a: Action): AppState {
         ...s,
         draft: {
           house: { ...defaultDraft().house, ...pick(s.draft.house, ["regionId", "years", "method"]), price: 0 },
-          meta: { name: "", memo: "", url: "", negoMax: s.draft.meta.negoMax },
+          meta: { name: "", memo: "", url: "" },
           listingId: null,
         },
       };

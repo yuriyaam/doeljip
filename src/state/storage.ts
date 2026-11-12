@@ -141,7 +141,6 @@ export function sanitizeMeta(x: unknown): ListingMeta {
     name: str(o.name, DEFAULT_META.name, 60),
     memo: str(o.memo, DEFAULT_META.memo, 200),
     url: str(o.url, DEFAULT_META.url, 500),
-    negoMax: num(o.negoMax, DEFAULT_META.negoMax, 100),
   };
 }
 

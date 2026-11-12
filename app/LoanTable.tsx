@@ -3,7 +3,7 @@
 import { useEffect, useId, useState } from "react";
 import { formatManwon as fmt, type House, type LoanId, type LoanResult, type NegoOption, type SortBy } from "../src/engine";
 import type { CheckResult } from "../src/state/derive";
-import { LOAN_SUB, bindingText, boostLine, noGoReason, won } from "../src/state/present";
+import { LOAN_SUB, bindingText, boostLine, negoPct, noGoReason, won } from "../src/state/present";
 import { AutoTerms } from "./components/InfoPopover";
 import { Panel } from "./components/Panel";
 import { RequirementList } from "./components/RequirementList";
@@ -75,7 +75,7 @@ export function LoanTable({ check, house, sortBy, actions }: Props) {
           <LoanRow
             key={`nego-${n.id}`}
             shown={n.result}
-            label={`${fmt(n.discount)} 네고 시 (${fmt(n.newPrice)})`}
+            label={`${fmt(n.discount)}(${negoPct(n)}) 네고 시 (${fmt(n.newPrice)})`}
             payLabel={payLabel}
             ghostPrice={n.newPrice}
             open={openKeys.has(`nego-${n.id}`)}
@@ -151,7 +151,7 @@ function LoanRow({ shown, label, payLabel, recommended, boost, ghostPrice, open,
           <b>{shown.name}</b>
           {recommended && <span className={styles.pick}>추천</span>}
           <em>{label}</em>
-          {!ghost && boost && <span className={styles.badge}>{fmt(boost.discount)} 네고 시 한도 +{fmt(boost.limitIncrease)}</span>}
+          {!ghost && boost && <span className={styles.badge}>{fmt(boost.discount)}({negoPct(boost)}) 네고 시 한도 +{fmt(boost.limitIncrease)}</span>}
         </span>
         <span className={styles.num} data-label="한도">{fmt(shown.limit)}</span>
         <span className={styles.num} data-label="금리">{shown.rate}%</span>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { computeCheck, makeVerdict } from "./derive";
-import { DEFAULT_HOUSE, DEFAULT_PROFILE, initialState } from "./defaults";
+import { DEFAULT_HOUSE, DEFAULT_PROFILE, initialState, negoMaxFor } from "./defaults";
 import { activeEntry, reducer } from "./reducer";
 import {
   BACKUP_KEY, STORAGE_KEY, STORAGE_VERSION, loadStored, parseStored, saveStored, serialize,
@@ -165,7 +165,7 @@ describe("리듀서", () => {
     );
     expect(s.listings).toHaveLength(1);
     const l = s.listings[0]!;
-    const check = computeCheck(activeEntry(s).profile, s.draft.house, s.rates, s.sortBy, s.draft.meta.negoMax);
+    const check = computeCheck(activeEntry(s).profile, s.draft.house, s.rates, s.sortBy);
     expect(l.verdict).toEqual(makeVerdict(check, s.draft.house, activeEntry(s).profile));
     expect(l.verdict.okCount).toBeGreaterThan(0);
     expect(l.meta.name).toBe("○○ 84㎡");
@@ -187,13 +187,13 @@ describe("리듀서", () => {
     const s = reduce(
       initialState(),
       { type: "house/update", patch: { regionId: "metro", years: 40, price: 55000, kb: 50000 } },
-      { type: "meta/update", patch: { name: "A", memo: "m", url: "u", negoMax: 10000 } },
+      { type: "meta/update", patch: { name: "A", memo: "m", url: "u" } },
       { type: "listing/save", id: "L1", now: 1 },
       { type: "listing/new" },
     );
     expect(s.draft.listingId).toBeNull();
     expect(s.draft.house).toMatchObject({ regionId: "metro", years: 40, price: 0, kb: 0 });
-    expect(s.draft.meta).toEqual({ name: "", memo: "", url: "", negoMax: 10000 });
+    expect(s.draft.meta).toEqual({ name: "", memo: "", url: "" });
     expect(s.listings).toHaveLength(1);
   });
 
@@ -230,7 +230,7 @@ describe("리듀서", () => {
 describe("판정 묶음", () => {
   it("README 예시(지방 6.2억, 신혼 9천)는 추천이 있고, 안 되는 대출은 네고로 풀리는 것을 뺀다", () => {
     const check = computeCheck(
-      { ...DEFAULT_PROFILE }, { ...DEFAULT_HOUSE, regionId: "local", price: 62000 }, {}, "monthly", 5000,
+      { ...DEFAULT_PROFILE }, { ...DEFAULT_HOUSE, regionId: "local", price: 62000 }, {}, "monthly",
     );
     expect(check.best).not.toBeNull();
     expect(check.ranked[0]).toBe(check.best);
@@ -241,10 +241,23 @@ describe("판정 묶음", () => {
     }
   });
 
+  it("네고는 매매가의 일정 비율(5%) 안에서만 안내한다", () => {
+    expect(negoMaxFor(62000)).toBe(3100);
+    expect(negoMaxFor(80000)).toBe(4000);
+    // 디딤돌은 매매가 6억 이하만 가능해요 (지방, 신혼)
+    const didimdol = (price: number) =>
+      computeCheck({ ...DEFAULT_PROFILE }, { ...DEFAULT_HOUSE, regionId: "local", price }, {}, "monthly")
+        .nego.find((n) => n.id === "didimdol");
+    expect(didimdol(62000)?.discount).toBe(2000); // 3.2% — 안내함
+    expect(didimdol(63000)?.discount).toBe(3000); // 4.8% — 한도 3,100만원 안
+    expect(didimdol(64000)).toBeUndefined(); // 6.3% — 비율을 넘어 안내하지 않음
+    expect(didimdol(70000)).toBeUndefined(); // 14%
+  });
+
   it("가능한 대출이 없으면 부족 자금은 매매가 − 보유 현금", () => {
     const p = { ...DEFAULT_PROFILE, inc1: 0, inc2: 0, cash: 1000 };
     const h = { ...DEFAULT_HOUSE, price: 50000 };
-    const check = computeCheck(p, h, {}, "monthly", 0);
+    const check = computeCheck(p, h, {}, "monthly");
     expect(check.best).toBeNull();
     expect(makeVerdict(check, h, p)).toEqual({ okCount: 0, bestName: null, bestLimit: 0, gap: 49000 });
   });

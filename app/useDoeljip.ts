@@ -43,8 +43,8 @@ export function useDoeljip() {
   const { house, meta } = state.draft;
 
   const check: CheckResult = useMemo(
-    () => computeCheck(active.profile, house, state.rates, state.sortBy, meta.negoMax),
-    [active.profile, house, state.rates, state.sortBy, meta.negoMax],
+    () => computeCheck(active.profile, house, state.rates, state.sortBy),
+    [active.profile, house, state.rates, state.sortBy],
   );
 
   const comparison: ProfileComparison[] = useMemo(

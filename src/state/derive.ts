@@ -6,6 +6,7 @@ import {
   evaluate, rankLoans, simulateNego,
   type Evaluation, type House, type LoanResult, type NegoOption, type Profile, type Rates, type SortBy,
 } from "../engine";
+import { negoMaxFor } from "./defaults";
 import type { ProfileEntry, Verdict } from "./types";
 
 export interface CheckResult {
@@ -20,12 +21,11 @@ export interface CheckResult {
   noGo: LoanResult[];
 }
 
-export function computeCheck(
-  profile: Profile, house: House, rates: Rates, sortBy: SortBy, negoMax: number,
-): CheckResult {
+/** 네고는 매매가의 일정 비율(NEGO_MAX_RATIO) 안에서만 살펴봐요. */
+export function computeCheck(profile: Profile, house: House, rates: Rates, sortBy: SortBy): CheckResult {
   const evaluation = evaluate(profile, house, rates);
   const ranked = rankLoans(evaluation.results, sortBy);
-  const nego = simulateNego(profile, house, rates, { max: negoMax });
+  const nego = simulateNego(profile, house, rates, { max: negoMaxFor(house.price) });
   const unlocked = new Set(nego.filter((n) => n.kind === "unlock").map((n) => n.id));
   const noGo = evaluation.results.filter((r) => !r.ok && !unlocked.has(r.id));
   return { evaluation, ranked, best: ranked[0] ?? null, nego, noGo };
