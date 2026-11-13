@@ -106,5 +106,30 @@ export function firstFailLabel(r: LoanResult): string {
   return r.reqs.find((q) => q.ok === false)?.label ?? "한도 0원";
 }
 
+/* ---------------- 단지 검색 ---------------- */
+
+/** 아파트 후보가 하나도 없을 때 (검색어 오타, 가게만 검색됨, 오피스텔·빌라 등) */
+export const NO_APARTMENT_MESSAGE = "아파트 단지를 찾지 못했어요. 단지 이름을 다시 확인해 주세요";
+export const NO_REGION_MESSAGE = "단지의 지역을 찾지 못했어요. 아래에서 지역을 직접 선택해 주세요";
+export const FETCH_FAILED_MESSAGE = "정보를 가져오지 못했어요. 아래에서 직접 입력해 주세요";
+
+/** 매물 이름 자동 입력: "잠실엘스 85㎡" */
+export const autoListingName = (aptNm: string, areaKey: number): string => `${aptNm} ${areaKey}㎡`;
+
+/** 비어 있거나 직전에 자동으로 넣은 이름일 때만 새 이름으로 바꿔요. 사용자가 직접 쓴 이름은 지키려는 거예요. */
+export const shouldReplaceName = (current: string, lastAuto: string | null): boolean =>
+  current.trim() === "" || (lastAuto !== null && current === lastAuto);
+
+/** 최근 거래 한 줄: "2026-10-22 · 8억 5,000만원 · 12층" (층이 0이면 층 생략) */
+export function tradeLine(t: { date: string; price: number; floor: number }): string {
+  return [t.date, fmt(t.price), t.floor !== 0 ? `${t.floor}층` : null].filter(Boolean).join(" · ");
+}
+
+/** 걸러낸 거래 안내. 걸러낸 게 없으면 null */
+export function excludedNote(e: { canceled: number; direct: number }): string | null {
+  const parts = [e.canceled > 0 ? `해제된 거래 ${e.canceled}건` : null, e.direct > 0 ? `직거래 ${e.direct}건` : null].filter(Boolean);
+  return parts.length ? `${parts.join("과 ")}은 뺐어요` : null;
+}
+
 /** 저장 목록 정렬용: 최근 저장한 순 */
 export const byRecent = <T extends { savedAt: number }>(a: T, c: T): number => c.savedAt - a.savedAt;

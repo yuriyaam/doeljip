@@ -19,6 +19,9 @@ export function DoeljipApp() {
   const app = useDoeljip();
   const { state, active, house, meta, check, comparison, status, actions } = app;
   const [tab, setTab] = useState<Tab>("check");
+  // 저장한 매물을 열거나 새 매물을 시작할 때 올려서, 단지 찾기 선택을 처음 상태로 되돌려요.
+  const [pickerKey, setPickerKey] = useState(0);
+  const resetPicker = () => setPickerKey((k) => k + 1);
 
   return (
     <InfoProvider>
@@ -41,7 +44,17 @@ export function DoeljipApp() {
         <div id="view-check" role="tabpanel" aria-labelledby="tab-check" hidden={tab !== "check"} className={styles.grid}>
           <form className={styles.inputs} autoComplete="off" onSubmit={(e) => e.preventDefault()}>
             <ProfilePanel profiles={state.profiles} active={active} actions={actions} />
-            <ListingPanel house={house} meta={meta} status={status} actions={actions} />
+            <ListingPanel
+              house={house}
+              meta={meta}
+              status={status}
+              actions={actions}
+              resetKey={pickerKey}
+              onNewListing={() => {
+                actions.newListing();
+                resetPicker();
+              }}
+            />
           </form>
           <div>
             <VerdictPanel check={check} house={house} meta={meta} sortBy={state.sortBy} />
@@ -55,6 +68,7 @@ export function DoeljipApp() {
             listings={state.listings}
             onOpen={(id) => {
               actions.openListing(id);
+              resetPicker();
               setTab("check");
             }}
             onDelete={actions.deleteListing}

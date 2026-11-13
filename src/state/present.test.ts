@@ -3,8 +3,8 @@ import { GLOSSARY, termKeysFor } from "../glossary";
 import { computeCheck } from "./derive";
 import { DEFAULT_HOUSE, DEFAULT_PROFILE } from "./defaults";
 import {
-  LOAN_SUB, bindingText, boostLine, conclusionTip, firstFailLabel, limitChange, negoPct, noGoReason,
-  profileSummary, reqTermText, won, type TextPart,
+  LOAN_SUB, NO_APARTMENT_MESSAGE, autoListingName, bindingText, boostLine, conclusionTip, excludedNote, firstFailLabel,
+  limitChange, negoPct, noGoReason, profileSummary, reqTermText, shouldReplaceName, tradeLine, won, type TextPart,
 } from "./present";
 
 const text = (parts: TextPart[] | null) => parts?.map((p) => p.text).join("");
@@ -115,6 +115,34 @@ describe("결론 네고 팁", () => {
     const boost = c.nego.find((n) => n.id === "general")!;
     expect(boost.kind).toBe("boost");
     expect(text(boostLine(boost))).toBe("매매가를 5,000만원(3.2%) 낮춰 15억원에 사면 한도가 2억원 늘어나요 (최대 6억원).");
+  });
+});
+
+describe("단지 검색 문구", () => {
+  it("결과가 없을 때 안내 문구는 정해진 그대로", () => {
+    expect(NO_APARTMENT_MESSAGE).toBe("아파트 단지를 찾지 못했어요. 단지 이름을 다시 확인해 주세요");
+  });
+
+  it("이름 자동 입력: 비었거나 직전 자동 이름일 때만 바꾼다", () => {
+    expect(autoListingName("잠실엘스", 85)).toBe("잠실엘스 85㎡");
+    expect(shouldReplaceName("", null)).toBe(true);
+    expect(shouldReplaceName("  ", null)).toBe(true);
+    expect(shouldReplaceName("잠실엘스 60㎡", "잠실엘스 60㎡")).toBe(true);
+    expect(shouldReplaceName("우리집 후보 1순위", "잠실엘스 60㎡")).toBe(false); // 직접 쓴 이름은 지킨다
+    expect(shouldReplaceName("우리집 후보 1순위", null)).toBe(false);
+  });
+
+  it("최근 거래 한 줄: 날짜 · 가격 · 층", () => {
+    expect(tradeLine({ date: "2026-10-22", price: 85000, floor: 12 })).toBe("2026-10-22 · 8억 5,000만원 · 12층");
+    expect(tradeLine({ date: "2026-10-22", price: 85000, floor: 0 })).toBe("2026-10-22 · 8억 5,000만원");
+    expect(tradeLine({ date: "2026-10-22", price: 9500, floor: -1 })).toBe("2026-10-22 · 9,500만원 · -1층");
+  });
+
+  it("걸러낸 거래 안내", () => {
+    expect(excludedNote({ canceled: 0, direct: 0 })).toBeNull();
+    expect(excludedNote({ canceled: 2, direct: 0 })).toBe("해제된 거래 2건은 뺐어요");
+    expect(excludedNote({ canceled: 0, direct: 1 })).toBe("직거래 1건은 뺐어요");
+    expect(excludedNote({ canceled: 2, direct: 1 })).toBe("해제된 거래 2건과 직거래 1건은 뺐어요");
   });
 });
 

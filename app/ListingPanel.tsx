@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import type { House } from "../src/engine";
 import { RULES } from "../src/rules";
 import type { ListingMeta } from "../src/state/types";
+import { ComplexPicker } from "./ComplexPicker";
 import { Button } from "./components/Button";
 import { CheckField, FieldRow, NumberField, SelectField, TextField } from "./components/Field";
 import { Term } from "./components/InfoPopover";
@@ -30,9 +31,12 @@ interface Props {
   meta: ListingMeta;
   status: StorageStatus;
   actions: DoeljipActions;
+  /** 바뀌면 단지 찾기 상태를 처음으로 되돌려요 */
+  resetKey: number;
+  onNewListing: () => void;
 }
 
-export function ListingPanel({ house, meta, status, actions }: Props) {
+export function ListingPanel({ house, meta, status, actions, resetKey, onNewListing }: Props) {
   const toast = useToast();
 
   // 저장돼 있던 값이 20/30/40이 아니어도 선택지에 보이게 해요.
@@ -44,13 +48,8 @@ export function ListingPanel({ house, meta, status, actions }: Props) {
 
   return (
     <Panel title="매물">
-      <TextField
-        label="단지명·별칭"
-        placeholder="래미안 ○○ 84㎡ 12층"
-        maxLength={60}
-        value={meta.name}
-        onChange={(v) => actions.updateMeta({ name: v })}
-      />
+      {/* 저장한 매물을 열거나 새 매물을 시작하면 key가 바뀌어 단지 선택 상태가 초기화돼요 */}
+      <ComplexPicker key={resetKey} actions={actions} name={meta.name} />
       <SelectField
         label="지역"
         info={<Term term="regulated" />}
@@ -117,7 +116,7 @@ export function ListingPanel({ house, meta, status, actions }: Props) {
         >
           이 매물 저장
         </Button>
-        <Button variant="ghost" onClick={actions.newListing}>새 매물</Button>
+        <Button variant="ghost" onClick={onNewListing}>새 매물</Button>
       </div>
       <p className={styles.store}>{STORE_HINT[status]}</p>
     </Panel>
